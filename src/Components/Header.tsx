@@ -1,7 +1,21 @@
 import React, { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { AppBar, Toolbar, Button, IconButton, Typography, Badge, Box, Drawer, List, ListItem, ListItemIcon, ListItemText, Link } from "@material-ui/core";
+import {
+    AppBar,
+    Toolbar,
+    Button,
+    IconButton,
+    Typography,
+    Badge,
+    Box,
+    Drawer,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Link,
+} from "@material-ui/core";
 import { ShoppingCart, Menu as MenuIcon } from "@material-ui/icons";
 import { State } from "../App";
 import { useSelector } from "react-redux";
@@ -46,24 +60,26 @@ export const Header = () => {
                         aria-label="menu"
                         onClick={() => setIsDrawerOpen(!isDrawerOpen)}
                     >
-                        <MenuIcon />    
-                        <Drawer 
+                        <MenuIcon />
+                        <Drawer
                             anchor="left"
-                            open={isDrawerOpen} 
+                            open={isDrawerOpen}
                             onClose={toggleDrawer}
                         >
                             <List>
                                 <ListItem
                                     onClick={toggleDrawer}
-                                    color='secondary'
+                                    color="secondary"
                                 >
-                                    <Link to="/cart" component={RouterLink} className={classes.link}>
+                                    <Link
+                                        to="/cart"
+                                        component={RouterLink}
+                                        className={classes.link}
+                                    >
                                         <ListItemIcon>
                                             <ShoppingCart />
                                         </ListItemIcon>
-                                        <ListItemText
-                                            primary="Checkout"
-                                        />
+                                        <ListItemText primary="Checkout" />
                                     </Link>
                                 </ListItem>
                             </List>
@@ -71,8 +87,10 @@ export const Header = () => {
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
                         House Of Kabob
-                    </Typography>                    
-                    <Button color="inherit" className={classes.loginButton}>Login</Button>
+                    </Typography>
+                    <Button color="inherit" className={classes.loginButton}>
+                        Login
+                    </Button>
                     <Badge badgeContent={cartItemsCount} color="secondary">
                         <Box>
                             <ShoppingCart />
@@ -82,6 +100,6 @@ export const Header = () => {
             </AppBar>
         </div>
     );
-}
+};
 
 export default Header;
