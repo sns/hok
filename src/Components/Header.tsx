@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { AppBar, Toolbar, Button, IconButton, Typography, Badge } from "@material-ui/core";
+import { AppBar, Toolbar, Button, IconButton, Typography, Badge, Box, Drawer, List, ListItem, ListItemIcon, ListItemText, Link } from "@material-ui/core";
 import { ShoppingCart, Menu as MenuIcon } from "@material-ui/icons";
 import { State } from "../App";
 import { useSelector } from "react-redux";
@@ -16,12 +17,23 @@ const useStyles = makeStyles((theme: Theme) =>
         title: {
             flexGrow: 1,
         },
+        loginButton: {
+            marginRight: theme.spacing(2),
+        },
+        link: {
+            display: "flex",
+        },
     })
 );
 
 export const Header = () => {
     const classes = useStyles();
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const cartItemsCount = useSelector<State, number>(s => s.CartItems.length);
+
+    const toggleDrawer = () => {
+        setIsDrawerOpen(!isDrawerOpen);
+    };
 
     return (
         <div className={classes.root}>
@@ -32,15 +44,39 @@ export const Header = () => {
                         className={classes.menuButton}
                         color="inherit"
                         aria-label="menu"
+                        onClick={() => setIsDrawerOpen(!isDrawerOpen)}
                     >
-                        <MenuIcon />
+                        <MenuIcon />    
+                        <Drawer 
+                            anchor="left"
+                            open={isDrawerOpen} 
+                            onClose={toggleDrawer}
+                        >
+                            <List>
+                                <ListItem
+                                    onClick={toggleDrawer}
+                                    color='secondary'
+                                >
+                                    <Link to="/cart" component={RouterLink} className={classes.link}>
+                                        <ListItemIcon>
+                                            <ShoppingCart />
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            primary="Checkout"
+                                        />
+                                    </Link>
+                                </ListItem>
+                            </List>
+                        </Drawer>
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
                         House Of Kabob
                     </Typography>                    
-                    <Button color="inherit">Login</Button>
+                    <Button color="inherit" className={classes.loginButton}>Login</Button>
                     <Badge badgeContent={cartItemsCount} color="secondary">
-                        <ShoppingCart />
+                        <Box>
+                            <ShoppingCart />
+                        </Box>
                     </Badge>
                 </Toolbar>
             </AppBar>
