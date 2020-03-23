@@ -26,7 +26,7 @@ export const MenuGrid: React.FC<Props> = (props) => {
 
     const renderMenuItem = (index: number, item: MenuItem) => {
         return (
-            <Grid item key={index} xs={props.isMobile ? 3 : 6 }>
+            <Grid item key={index} xs={props.isMobile ? 6 : 3 }>
                 <MenuItemCard item={item} />
             </Grid>
         );
