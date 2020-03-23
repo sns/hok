@@ -1,7 +1,9 @@
 import React from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { AppBar, Toolbar, Button, IconButton } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
+import { AppBar, Toolbar, Button, IconButton, Typography, Badge } from "@material-ui/core";
+import { ShoppingCart, Menu as MenuIcon } from "@material-ui/icons";
+import { State } from "../App";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -19,6 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Header = () => {
     const classes = useStyles();
+    const cartItemsCount = useSelector<State, number>(s => s.CartItems.length);
 
     return (
         <div className={classes.root}>
@@ -32,7 +35,13 @@ export const Header = () => {
                     >
                         <MenuIcon />
                     </IconButton>
+                    <Typography variant="h6" className={classes.title}>
+                        House Of Kabob
+                    </Typography>                    
                     <Button color="inherit">Login</Button>
+                    <Badge badgeContent={cartItemsCount} color="secondary">
+                        <ShoppingCart />
+                    </Badge>
                 </Toolbar>
             </AppBar>
         </div>

@@ -17,13 +17,16 @@ const useStyles = makeStyles((theme: Theme) =>
         },
     })
 );
+export interface Props {
+    isMobile?: boolean;
+}
 
-export const Menu = () => {
+export const MenuGrid: React.FC<Props> = (props) => {
     const classes = useStyles();
 
     const renderMenuItem = (index: number, item: MenuItem) => {
         return (
-            <Grid item key={index} xs={3}>
+            <Grid item key={index} xs={props.isMobile ? 3 : 6 }>
                 <MenuItemCard item={item} />
             </Grid>
         );
@@ -36,4 +39,4 @@ export const Menu = () => {
     );
 };
 
-export default Menu;
+export default MenuGrid;

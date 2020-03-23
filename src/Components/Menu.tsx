@@ -1,8 +1,7 @@
 import React from "react";
 import { Container, Hidden } from "@material-ui/core";
 import { Header } from "./Header";
-import MenuWeb from "./MenuWeb";
-import MenuMobile from "./MenuMobile";
+import MenuGrid from "./MenuGrid";
 
 export const Menu: React.FC = () => {
     return (
@@ -10,10 +9,10 @@ export const Menu: React.FC = () => {
             <Header />
             <Container>
                 <Hidden xsDown>
-                    <MenuWeb />
+                    <MenuGrid />
                 </Hidden>
                 <Hidden smUp>
-                    <MenuMobile />
+                    <MenuGrid isMobile={true}/>
                 </Hidden>
             </Container>
         </>
