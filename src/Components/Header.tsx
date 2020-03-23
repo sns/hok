@@ -16,7 +16,12 @@ import {
     ListItemText,
     Link,
 } from "@material-ui/core";
-import { ShoppingCart, Menu as MenuIcon } from "@material-ui/icons";
+import {
+    ShoppingCart,
+    Menu as MenuIcon,
+    RestaurantMenu,
+} from "@material-ui/icons";
+import classNames from "classnames";
 import { State } from "../App";
 import { useSelector } from "react-redux";
 
@@ -36,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         link: {
             display: "flex",
+            color: "inherit",
         },
     })
 );
@@ -72,6 +78,21 @@ export const Header = () => {
                                     color="secondary"
                                 >
                                     <Link
+                                        to="/"
+                                        component={RouterLink}
+                                        className={classes.link}
+                                    >
+                                        <ListItemIcon>
+                                            <RestaurantMenu />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Menu" />
+                                    </Link>
+                                </ListItem>
+                                <ListItem
+                                    onClick={toggleDrawer}
+                                    color="secondary"
+                                >
+                                    <Link
                                         to="/cart"
                                         component={RouterLink}
                                         className={classes.link}
@@ -85,17 +106,27 @@ export const Header = () => {
                             </List>
                         </Drawer>
                     </IconButton>
-                    <Typography variant="h6" className={classes.title}>
-                        House Of Kabob
-                    </Typography>
+                    <Link
+                        className={classNames(classes.title, classes.link)}
+                        to="/"
+                        component={RouterLink}
+                    >
+                        <Typography variant="h6">House Of Kabob</Typography>
+                    </Link>
                     <Button color="inherit" className={classes.loginButton}>
                         Login
                     </Button>
-                    <Badge badgeContent={cartItemsCount} color="secondary">
-                        <Box>
-                            <ShoppingCart />
-                        </Box>
-                    </Badge>
+                    <Link
+                        to="/cart"
+                        component={RouterLink}
+                        className={classes.link}
+                    >
+                        <Badge badgeContent={cartItemsCount} color="secondary">
+                            <Box>
+                                <ShoppingCart />
+                            </Box>
+                        </Badge>
+                    </Link>
                 </Toolbar>
             </AppBar>
         </div>
