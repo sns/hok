@@ -5,16 +5,19 @@ import { Menu } from "./Components/Menu";
 import { MenuItem } from "./Models";
 
 import { Provider } from "react-redux";
-import { createStore } from "redux";
+import { createStore, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Cart from "./Components/Cart";
+import CartItem from "./Models/CartItem";
+import { Hidden } from "@material-ui/core";
 
 export interface State {
-    CartItems: MenuItem[];
+    cartItems: CartItem[];
 }
 
 const initialState = {
-    CartItems: [],
+    cartItems: [],
 };
 
 export const ADD_TO_CART = "ADD_TO_CART";
@@ -26,19 +29,24 @@ export const addToCart = (item: MenuItem) => {
     };
 };
 
-const rootReducer = (state: State = initialState, action: any) => {
+const rootReducer = (state: State = initialState, action: any): State => {
     switch (action.type) {
         case ADD_TO_CART:
+            const menuItem: MenuItem = action.payload;
+            const updatedCartItems = state.cartItems.findIndex(x => x.item.id === menuItem.id) === -1
+                ? [...state.cartItems, {item: menuItem, quantity: 1}]
+                : state.cartItems.map(x => x.item.id === menuItem.id ? {...x, quantity: x.quantity + 1} : x);
+
             return {
                 ...state,
-                CartItems: [...state.CartItems, action.payload],
+                cartItems: updatedCartItems,
             };
         default:
             return state;
     }
 };
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
 
 function App() {
     return (
@@ -49,7 +57,12 @@ function App() {
                         <Menu />
                     </Route>
                     <Route path="/cart">
-                        <Cart />
+                        <Hidden xsDown>
+                            <Cart />
+                        </Hidden>
+                        <Hidden smUp>
+                            <Cart isMobile={true}/>
+                        </Hidden>
                     </Route>
                 </Switch>
             </BrowserRouter>

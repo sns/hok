@@ -49,7 +49,11 @@ const useStyles = makeStyles((theme: Theme) =>
 export const Header = () => {
     const classes = useStyles();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const cartItemsCount = useSelector<State, number>(s => s.CartItems.length);
+    const cartItemsCount = useSelector<State, number>(s => s.cartItems.reduce(
+        (counter, item) => { 
+            counter += item.quantity;
+            return counter;
+        } , 0));
 
     const toggleDrawer = () => {
         setIsDrawerOpen(!isDrawerOpen);

@@ -3,7 +3,6 @@ import Header from "./Header";
 import {
     Container,
     Grid,
-    TextField,
     Box,
     makeStyles,
     createStyles,
@@ -11,34 +10,55 @@ import {
 } from "@material-ui/core";
 import { State } from "../App";
 import { useSelector } from "react-redux";
-import { MenuItem } from "../Models";
+import CartItem from "../Models/CartItem";
 
 const useStyles = makeStyles(theme =>
     createStyles({
+        container: {
+            height: "100vh",
+        },
         cartContainer: {
             margin: "20px 10px",
+            width: 'fit-content',
+            border: `1px solid ${theme.palette.divider}`,
+            borderRadius: theme.shape.borderRadius,
+            backgroundColor: theme.palette.background.paper,
+            color: theme.palette.text.secondary,
         },
         emptyCartMessage: {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             height: "100vh",
+            color: theme.palette.text.secondary,
         },
     })
 );
-export const Cart: React.FC = props => {
-    const classes = useStyles();
-    const cartItems = useSelector<State, MenuItem[]>(state => state.CartItems);
 
-    const renderCartItem = (item: MenuItem, index: number) => {
+export interface Props {
+    isMobile?: boolean;
+}
+
+export const Cart: React.FC<Props> = props => {
+    const classes = useStyles();
+    const cartItems = useSelector<State, CartItem[]>(state => state.cartItems);
+
+    const renderCartItem = (cartItem: CartItem, index: number) => {
         return (
             <React.Fragment key={index}>
-                <Grid item xs={3}>
-                    <Typography variant="h6">{item.name}</Typography>
-                    <Typography component="p">{item.description}</Typography>
+                <Grid item xs={2}>
+                    <Typography component="h6">{cartItem.quantity}</Typography>
                 </Grid>
-                <Grid item xs={3}>
-                    <TextField id="standard-basic" label="# of oders" />
+                <Grid item xs={8}>
+                    <Typography variant="h6">{cartItem.item.name}</Typography>
+                    <Typography component="p">
+                        {cartItem.item.description}
+                    </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                    <Typography component="h6">
+                        {`$${cartItem.quantity * cartItem.item.price}`}
+                    </Typography>
                 </Grid>
             </React.Fragment>
         );
@@ -47,30 +67,35 @@ export const Cart: React.FC = props => {
     const renderCartGrid = () => {
         if (cartItems.length === 0) {
             return (
-                <Container>
-                    <Box className={classes.emptyCartMessage}>
-                        <Typography variant="h3"> 
-                            Your cart is empty
-                        </Typography>
-                    </Box>
-                </Container>
+                <Box className={classes.emptyCartMessage}>
+                    <Typography variant="h4">Your cart is empty</Typography>
+                </Box>
             );
         }
         return (
-            <Container className={classes.cartContainer}>
-                <Grid container>
-                    {cartItems.map((item, index) =>
-                        renderCartItem(item, index)
-                    )}
-                </Grid>
-            </Container>
+            <>
+                <Container className={classes.cartContainer}>
+                    <Grid container spacing={2}>
+                        {cartItems.map((item, index) =>
+                            renderCartItem(item, index)
+                        )}
+                    </Grid>
+                </Container>
+            </>
         );
     };
 
     return (
         <>
             <Header />
-            {renderCartGrid()}
+            <Grid container className={classes.container}>
+                <Grid item xs={6} >
+                    <Box>Payment info</Box>
+                </Grid>
+                <Grid item xs={6}>
+                    {renderCartGrid()}
+                </Grid>
+            </Grid>
         </>
     );
 };
