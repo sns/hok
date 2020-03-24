@@ -9,10 +9,11 @@ import {
     Typography,
     Divider,
 } from "@material-ui/core";
-import { State } from "../App";
-import { useSelector } from "react-redux";
+import { State, addToCart, removeFromCart } from "../App";
+import { useSelector, useDispatch } from "react-redux";
 import CartItem from "../Models/CartItem";
 import classNames from "classnames";
+import { AddCircle, RemoveCircle } from "@material-ui/icons";
 
 const MD_TAX_RATE = 0.06;
 const useStyles = makeStyles(theme =>
@@ -42,7 +43,7 @@ const useStyles = makeStyles(theme =>
         },
         column: {
             overflow: "auto",
-        }
+        },
     })
 );
 
@@ -52,6 +53,7 @@ export interface Props {
 
 export const Cart: React.FC<Props> = props => {
     const classes = useStyles();
+    const dispatch = useDispatch();
     const cartItems = useSelector<State, CartItem[]>(state => state.cartItems);
 
     const renderCartItem = (cartItem: CartItem, index: number) => {
@@ -60,16 +62,26 @@ export const Cart: React.FC<Props> = props => {
                 <Grid item xs={2} className={classNames(classes.centered, classes.column)}>
                     <Typography variant="h6">{cartItem.quantity}</Typography>
                 </Grid>
-                <Grid item xs={7} className={classes.column}>
+                <Grid item xs={6} className={classes.column}>
                     <Typography variant="h6">{cartItem.item.name}</Typography>
                     <Typography component="p">
                         {cartItem.item.description}
                     </Typography>
                 </Grid>
-                <Grid item xs={3} className={classNames(classes.centered, classes.column)}>
+                <Grid item xs={2} className={classNames(classes.centered, classes.column)}>
                     <Typography variant="h6">
                         {`$${cartItem.quantity * cartItem.item.price}`}
                     </Typography>
+                </Grid>
+                <Grid item xs={2} className={classNames(classes.centered, classes.column)}>
+                    <Grid container>
+                        <Grid item xs={6}>
+                            <AddCircle color="primary" onClick={() => dispatch(addToCart(cartItem.item))}/>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <RemoveCircle color="primary" onClick={() => dispatch(removeFromCart(cartItem.item.id))}/>
+                        </Grid>
+                    </Grid>
                 </Grid>
                 <Divider className={classes.divider} />
             </React.Fragment>
@@ -83,46 +95,15 @@ export const Cart: React.FC<Props> = props => {
         }, 0);
     }
 
-    const renderSubTotalRow = () => {
+    const renderFeeRow = (label: string, amount: string) => {
         return (
             <React.Fragment>
                 <Grid item xs={2} className={classNames(classes.centered, classes.column)}/>
-                <Grid item xs={7} className={classes.column}>
-                    <Typography variant="h6">SubTotal</Typography>
+                <Grid item xs={6} className={classes.column}>
+                    <Typography variant="h6">{label}</Typography>
                 </Grid>
                 <Grid item xs={3} className={classNames(classes.centered, classes.column)}>
-                    <Typography variant="h6">{`$${calculateSubTotal().toFixed(2)}`}</Typography>
-                </Grid>
-            </React.Fragment>
-        );
-    }
-
-    const renderTaxRow = () => {
-        return (
-            <React.Fragment>
-                <Grid item xs={2} className={classNames(classes.centered, classes.column)}/>
-                <Grid item xs={7} className={classes.column}>
-                    <Typography variant="h6">Tax</Typography>
-                </Grid>
-                <Grid item xs={3} className={classNames(classes.centered, classes.column)}>
-                    <Typography variant="h6">{`$${(calculateSubTotal() * MD_TAX_RATE).toFixed(2) }`}</Typography>
-                </Grid>
-            </React.Fragment>
-        );
-    }
-
-    const renderTotalRow = () => {
-        return (
-            <React.Fragment>
-                <Grid item xs={2} className={classNames(classes.centered, classes.column)} />
-                <Grid item xs={7} className={classes.column}>
-                    <Typography variant="h6">Total</Typography>
-                </Grid>
-                <Grid item xs={3} className={classNames(classes.centered, classes.column)}>
-                    <Typography variant="h6">{`$${(
-                        calculateSubTotal() *
-                        (1 + MD_TAX_RATE)
-                    ).toFixed(2)}`}</Typography>
+                    <Typography variant="h6">{`$${amount}`}</Typography>
                 </Grid>
             </React.Fragment>
         );
@@ -135,9 +116,9 @@ export const Cart: React.FC<Props> = props => {
                     {cartItems.map((item, index) =>
                         renderCartItem(item, index)
                     )}
-                    {renderSubTotalRow()}
-                    {renderTaxRow()}
-                    {renderTotalRow()}
+                    {renderFeeRow("SubTotal", calculateSubTotal().toFixed(2))}
+                    {renderFeeRow("Tax", (calculateSubTotal() * MD_TAX_RATE).toFixed(2))}
+                    {renderFeeRow("Total", (calculateSubTotal() * (1 + MD_TAX_RATE)).toFixed(2))}
                 </Grid>
             </Container>
         );
@@ -158,10 +139,10 @@ export const Cart: React.FC<Props> = props => {
         <>
             <Header />
             <Grid container>
-                <Grid item xs={props.isMobile ? 12 : 6}>
+                <Grid item xs={props.isMobile ? 12 : 7}>
                     {renderCartGrid()}
                 </Grid>
-                <Grid item xs={props.isMobile ? 12 : 6}>
+                <Grid item xs={props.isMobile ? 12 : 5}>
                     <Box>Payment info</Box>
                 </Grid>
             </Grid>

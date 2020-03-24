@@ -21,6 +21,7 @@ const initialState = {
 };
 
 export const ADD_TO_CART = "ADD_TO_CART";
+export const REMOVE_FROM_CART = "REMOVE_FROM_CART";
 
 export const addToCart = (item: MenuItem) => {
     return {
@@ -28,6 +29,13 @@ export const addToCart = (item: MenuItem) => {
         payload: item,
     };
 };
+
+export const removeFromCart = (id: number) => {
+    return {
+        type: REMOVE_FROM_CART,
+        payload: id,
+    };
+}
 
 const rootReducer = (state: State = initialState, action: any): State => {
     switch (action.type) {
@@ -40,6 +48,24 @@ const rootReducer = (state: State = initialState, action: any): State => {
             return {
                 ...state,
                 cartItems: updatedCartItems,
+            };
+        case REMOVE_FROM_CART:
+            return {
+                ...state,
+                cartItems: state.cartItems.reduce((acc: CartItem[], ci: CartItem) => {
+                    if(ci.item.id === action.payload) {
+                        if(ci.quantity > 1) {
+                            acc.push({
+                                ...ci,
+                                 quantity: ci.quantity-1,
+                            });
+                            return acc;
+                        }
+                        return acc;
+                    }
+                    acc.push(ci);
+                    return acc;
+                }, []),
             };
         default:
             return state;
