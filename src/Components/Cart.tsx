@@ -9,11 +9,11 @@ import {
     Typography,
     Divider,
 } from "@material-ui/core";
-import { State, addToCart, removeFromCart } from "../App";
+import { State, addToCart, removeFromCart, clearCart } from "../App";
 import { useSelector, useDispatch } from "react-redux";
 import CartItem from "../Models/CartItem";
 import classNames from "classnames";
-import { AddCircle, RemoveCircle } from "@material-ui/icons";
+import { AddCircle, RemoveCircle, Delete } from "@material-ui/icons";
 
 const MD_TAX_RATE = 0.06;
 const useStyles = makeStyles(theme =>
@@ -95,14 +95,29 @@ export const Cart: React.FC<Props> = props => {
         }, 0);
     }
 
-    const renderFeeRow = (label: string, amount: string) => {
+    const renderFeeRow = (label: string, amount: string, renderClearIcon: boolean = false) => {
         return (
             <React.Fragment>
-                <Grid item xs={2} className={classNames(classes.centered, classes.column)}/>
+                <Grid
+                    item
+                    xs={2}
+                    className={classNames(classes.centered, classes.column)}
+                >
+                    {renderClearIcon && (
+                        <Delete
+                            onClick={() => dispatch(clearCart())}
+                            color="secondary"
+                        />
+                    )}
+                </Grid>
                 <Grid item xs={6} className={classes.column}>
                     <Typography variant="h6">{label}</Typography>
                 </Grid>
-                <Grid item xs={3} className={classNames(classes.centered, classes.column)}>
+                <Grid
+                    item
+                    xs={3}
+                    className={classNames(classes.centered, classes.column)}
+                >
                     <Typography variant="h6">{`$${amount}`}</Typography>
                 </Grid>
             </React.Fragment>
@@ -118,11 +133,13 @@ export const Cart: React.FC<Props> = props => {
                     )}
                     {renderFeeRow("SubTotal", calculateSubTotal().toFixed(2))}
                     {renderFeeRow("Tax", (calculateSubTotal() * MD_TAX_RATE).toFixed(2))}
-                    {renderFeeRow("Total", (calculateSubTotal() * (1 + MD_TAX_RATE)).toFixed(2))}
+                    {renderFeeRow("Total", (calculateSubTotal() * (1 + MD_TAX_RATE)).toFixed(2), cartItems.length > 0)}
                 </Grid>
             </Container>
         );
     };
+
+    
 
     if (cartItems.length === 0) {
         return (

@@ -22,6 +22,7 @@ const initialState = {
 
 export const ADD_TO_CART = "ADD_TO_CART";
 export const REMOVE_FROM_CART = "REMOVE_FROM_CART";
+export const CLEAR_CART = "CLEAR_CART";
 
 export const addToCart = (item: MenuItem) => {
     return {
@@ -34,6 +35,12 @@ export const removeFromCart = (id: number) => {
     return {
         type: REMOVE_FROM_CART,
         payload: id,
+    };
+}
+
+export const clearCart = () => {
+    return {
+        type: CLEAR_CART
     };
 }
 
@@ -67,6 +74,12 @@ const rootReducer = (state: State = initialState, action: any): State => {
                     return acc;
                 }, []),
             };
+        case CLEAR_CART: {
+            return {
+                ...state,
+                cartItems: [],
+            }
+        }
         default:
             return state;
     }
