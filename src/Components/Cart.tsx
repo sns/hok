@@ -14,9 +14,6 @@ import CartItem from "../Models/CartItem";
 
 const useStyles = makeStyles(theme =>
     createStyles({
-        container: {
-            height: "100vh",
-        },
         cartContainer: {
             margin: "20px 10px",
             width: 'fit-content',
@@ -26,10 +23,10 @@ const useStyles = makeStyles(theme =>
             color: theme.palette.text.secondary,
         },
         emptyCartMessage: {
+            height: "100vh",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            height: "100vh",
             color: theme.palette.text.secondary,
         },
     })
@@ -65,13 +62,6 @@ export const Cart: React.FC<Props> = props => {
     };
 
     const renderCartGrid = () => {
-        if (cartItems.length === 0) {
-            return (
-                <Box className={classes.emptyCartMessage}>
-                    <Typography variant="h4">Your cart is empty</Typography>
-                </Box>
-            );
-        }
         return (
             <>
                 <Container className={classes.cartContainer}>
@@ -85,10 +75,21 @@ export const Cart: React.FC<Props> = props => {
         );
     };
 
+    if(cartItems.length === 0) {
+        return (
+            <>
+                <Header />
+                <Container className={classes.emptyCartMessage}>
+                    <Typography variant="h6">Your cart is empty</Typography>
+                </Container>
+            </>
+        );
+    }
+
     return (
         <>
             <Header />
-            <Grid container className={classes.container}>
+            <Grid container>
                 <Grid item xs={6} >
                     <Box>Payment info</Box>
                 </Grid>
