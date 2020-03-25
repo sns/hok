@@ -10,8 +10,15 @@ import {
     Typography,
     Divider,
     TextField,
+    Paper,
 } from "@material-ui/core";
-import { State, addToCart, removeFromCart, clearCart, MD_TAX_RATE } from "../App";
+import {
+    State,
+    addToCart,
+    removeFromCart,
+    clearCart,
+    MD_TAX_RATE,
+} from "../App";
 import { useSelector, useDispatch } from "react-redux";
 import CartItem from "../Models/CartItem";
 import classNames from "classnames";
@@ -19,13 +26,33 @@ import { AddCircle, RemoveCircle, Delete } from "@material-ui/icons";
 
 const useStyles = makeStyles(theme =>
     createStyles({
-        cartContainer: {
-            width: "90%",
-            marginTop: "20px",
-            border: `1px solid ${theme.palette.divider}`,
-            borderRadius: theme.shape.borderRadius,
-            backgroundColor: theme.palette.background.paper,
-            color: theme.palette.text.secondary,
+        // cartContainer: {
+        //     width: "90%",
+        //     marginTop: "20px",
+        //     border: `1px solid ${theme.palette.divider}`,
+        //     borderRadius: theme.shape.borderRadius,
+        //     backgroundColor: theme.palette.background.paper,
+        //     color: theme.palette.text.secondary,
+        // },
+        layout: {
+            width: "auto",
+            marginLeft: theme.spacing(2),
+            marginRight: theme.spacing(2),
+            [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
+                width: 600,
+                marginLeft: "auto",
+                marginRight: "auto",
+            },
+        },
+        paper: {
+            marginTop: theme.spacing(3),
+            marginBottom: theme.spacing(3),
+            padding: theme.spacing(2),
+            [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
+                marginTop: theme.spacing(6),
+                marginBottom: theme.spacing(6),
+                padding: theme.spacing(3),
+            },
         },
         emptyCartMessage: {
             height: "100vh",
@@ -38,7 +65,7 @@ const useStyles = makeStyles(theme =>
             width: "100%",
         },
         centered: {
-            display:"flex",
+            display: "flex",
             alignItems: "center",
             justifyContent: "center",
         },
@@ -66,7 +93,11 @@ export const Cart: React.FC<Props> = props => {
     const renderCartItem = (cartItem: CartItem, index: number) => {
         return (
             <React.Fragment key={index}>
-                <Grid item xs={2} className={classNames(classes.centered, classes.column)}>
+                <Grid
+                    item
+                    xs={2}
+                    className={classNames(classes.centered, classes.column)}
+                >
                     <Typography variant="h6">{cartItem.quantity}</Typography>
                 </Grid>
                 <Grid item xs={6} className={classes.column}>
@@ -75,18 +106,38 @@ export const Cart: React.FC<Props> = props => {
                         {cartItem.item.description}
                     </Typography>
                 </Grid>
-                <Grid item xs={2} className={classNames(classes.centered, classes.column)}>
+                <Grid
+                    item
+                    xs={2}
+                    className={classNames(classes.centered, classes.column)}
+                >
                     <Typography variant="h6">
-                        {`$${(cartItem.quantity * cartItem.item.price).toFixed(2)}`}
+                        {`$${(cartItem.quantity * cartItem.item.price).toFixed(
+                            2
+                        )}`}
                     </Typography>
                 </Grid>
-                <Grid item xs={2} className={classNames(classes.centered, classes.column)}>
+                <Grid
+                    item
+                    xs={2}
+                    className={classNames(classes.centered, classes.column)}
+                >
                     <Grid container>
                         <Grid item xs={6}>
-                            <AddCircle color="primary" onClick={() => dispatch(addToCart(cartItem.item))}/>
+                            <AddCircle
+                                color="primary"
+                                onClick={() =>
+                                    dispatch(addToCart(cartItem.item))
+                                }
+                            />
                         </Grid>
                         <Grid item xs={6}>
-                            <RemoveCircle color="primary" onClick={() => dispatch(removeFromCart(cartItem.item.id))}/>
+                            <RemoveCircle
+                                color="primary"
+                                onClick={() =>
+                                    dispatch(removeFromCart(cartItem.item.id))
+                                }
+                            />
                         </Grid>
                     </Grid>
                 </Grid>
@@ -100,9 +151,13 @@ export const Cart: React.FC<Props> = props => {
             subTotal += cartItem.quantity * cartItem.item.price;
             return subTotal;
         }, 0);
-    }
+    };
 
-    const renderFeeRow = (label: string, amount: string, renderClearIcon: boolean = false) => {
+    const renderFeeRow = (
+        label: string,
+        amount: string,
+        renderClearIcon: boolean = false
+    ) => {
         return (
             <React.Fragment>
                 <Grid
@@ -130,20 +185,37 @@ export const Cart: React.FC<Props> = props => {
                 <Grid item xs={2} />
             </React.Fragment>
         );
-    }
+    };
 
     const renderCartGrid = () => {
         return (
-            <Container className={classNames(classes.cartContainer, classes.centered)} maxWidth="sm">
-                <Grid container spacing={1}>
-                    {cartItems.map((item, index) =>
-                        renderCartItem(item, index)
-                    )}
-                    {renderFeeRow("SubTotal", calculateSubTotal().toFixed(2))}
-                    {renderFeeRow("Tax", (calculateSubTotal() * MD_TAX_RATE).toFixed(2))}
-                    {renderFeeRow("Total", (calculateSubTotal() * (1 + MD_TAX_RATE)).toFixed(2), cartItems.length > 0)}
-                </Grid>
-            </Container>
+            <main className={classes.layout}>
+                <Paper className={classes.paper}>
+                    <Typography component="h1" variant="h4" align="center">
+                        Cart
+                    </Typography>
+                    <Grid container spacing={1}>
+                        {cartItems.map((item, index) =>
+                            renderCartItem(item, index)
+                        )}
+                        {renderFeeRow(
+                            "SubTotal",
+                            calculateSubTotal().toFixed(2)
+                        )}
+                        {renderFeeRow(
+                            "Tax",
+                            (calculateSubTotal() * MD_TAX_RATE).toFixed(2)
+                        )}
+                        {renderFeeRow(
+                            "Total",
+                            (calculateSubTotal() * (1 + MD_TAX_RATE)).toFixed(
+                                2
+                            ),
+                            cartItems.length > 0
+                        )}
+                    </Grid>
+                </Paper>
+            </main>
         );
     };
 
@@ -157,36 +229,6 @@ export const Cart: React.FC<Props> = props => {
             </>
         );
     }
-
-    const renderCheckoutForm = () => {
-        return (
-            <Container
-                className={classNames(classes.cartContainer, classes.centered)}
-                maxWidth="sm"
-            >
-                <Box className={classes.addressGrid} display="flex" flexDirection="column">
-                    <Box p={1}>
-                        <TextField id="outlined-basic" label="Address 1" className={classes.addressInput} />
-                    </Box>
-                    <Box p={1}>
-                        <TextField id="outlined-basic" label="Address 2" className={classes.addressInput}/>
-                    </Box>
-                    <Box p={1}>
-                        <TextField id="outlined-basic" label="Apt" className={classes.addressInput}/>
-                    </Box>
-                    <Box p={1}>
-                        <TextField id="outlined-basic" label="City" className={classes.addressInput}/>
-                    </Box>
-                    <Box p={1}>
-                        <TextField id="outlined-basic" label="State" className={classes.addressInput}/>
-                    </Box>
-                    <Box p={1}>
-                        <TextField id="outlined-basic" label="Zipcode" className={classes.addressInput}/>
-                    </Box>
-                </Box>
-            </Container>
-        );
-    };
 
     return (
         <>
