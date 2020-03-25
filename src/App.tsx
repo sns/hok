@@ -20,6 +20,8 @@ const initialState = {
     cartItems: [],
 };
 
+export const MD_TAX_RATE = 0.06;
+
 export const ADD_TO_CART = "ADD_TO_CART";
 export const REMOVE_FROM_CART = "REMOVE_FROM_CART";
 export const CLEAR_CART = "CLEAR_CART";

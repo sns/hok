@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "./Header";
+import Checkout from "./Checkout";
 import {
     Container,
     Grid,
@@ -8,14 +9,14 @@ import {
     createStyles,
     Typography,
     Divider,
+    TextField,
 } from "@material-ui/core";
-import { State, addToCart, removeFromCart, clearCart } from "../App";
+import { State, addToCart, removeFromCart, clearCart, MD_TAX_RATE } from "../App";
 import { useSelector, useDispatch } from "react-redux";
 import CartItem from "../Models/CartItem";
 import classNames from "classnames";
 import { AddCircle, RemoveCircle, Delete } from "@material-ui/icons";
 
-const MD_TAX_RATE = 0.06;
 const useStyles = makeStyles(theme =>
     createStyles({
         cartContainer: {
@@ -44,6 +45,12 @@ const useStyles = makeStyles(theme =>
         column: {
             overflow: "auto",
         },
+        addressGrid: {
+            height: "400px",
+        },
+        addressInput: {
+            width: "100%",
+        },
     })
 );
 
@@ -70,7 +77,7 @@ export const Cart: React.FC<Props> = props => {
                 </Grid>
                 <Grid item xs={2} className={classNames(classes.centered, classes.column)}>
                     <Typography variant="h6">
-                        {`$${cartItem.quantity * cartItem.item.price}`}
+                        {`$${(cartItem.quantity * cartItem.item.price).toFixed(2)}`}
                     </Typography>
                 </Grid>
                 <Grid item xs={2} className={classNames(classes.centered, classes.column)}>
@@ -115,11 +122,12 @@ export const Cart: React.FC<Props> = props => {
                 </Grid>
                 <Grid
                     item
-                    xs={3}
+                    xs={2}
                     className={classNames(classes.centered, classes.column)}
                 >
                     <Typography variant="h6">{`$${amount}`}</Typography>
                 </Grid>
+                <Grid item xs={2} />
             </React.Fragment>
         );
     }
@@ -139,8 +147,6 @@ export const Cart: React.FC<Props> = props => {
         );
     };
 
-    
-
     if (cartItems.length === 0) {
         return (
             <>
@@ -152,15 +158,45 @@ export const Cart: React.FC<Props> = props => {
         );
     }
 
+    const renderCheckoutForm = () => {
+        return (
+            <Container
+                className={classNames(classes.cartContainer, classes.centered)}
+                maxWidth="sm"
+            >
+                <Box className={classes.addressGrid} display="flex" flexDirection="column">
+                    <Box p={1}>
+                        <TextField id="outlined-basic" label="Address 1" className={classes.addressInput} />
+                    </Box>
+                    <Box p={1}>
+                        <TextField id="outlined-basic" label="Address 2" className={classes.addressInput}/>
+                    </Box>
+                    <Box p={1}>
+                        <TextField id="outlined-basic" label="Apt" className={classes.addressInput}/>
+                    </Box>
+                    <Box p={1}>
+                        <TextField id="outlined-basic" label="City" className={classes.addressInput}/>
+                    </Box>
+                    <Box p={1}>
+                        <TextField id="outlined-basic" label="State" className={classes.addressInput}/>
+                    </Box>
+                    <Box p={1}>
+                        <TextField id="outlined-basic" label="Zipcode" className={classes.addressInput}/>
+                    </Box>
+                </Box>
+            </Container>
+        );
+    };
+
     return (
         <>
             <Header />
             <Grid container>
-                <Grid item xs={props.isMobile ? 12 : 7}>
+                <Grid item xs={props.isMobile ? 12 : 12}>
                     {renderCartGrid()}
                 </Grid>
-                <Grid item xs={props.isMobile ? 12 : 5}>
-                    <Box>Payment info</Box>
+                <Grid item xs={props.isMobile ? 12 : 12}>
+                    <Checkout />
                 </Grid>
             </Grid>
         </>
