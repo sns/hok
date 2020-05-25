@@ -1,21 +1,8 @@
 import React from "react";
-import { makeStyles, Typography, Link, Stepper, Step, StepLabel, Paper, Button } from "@material-ui/core";
+import { makeStyles, Typography, Stepper, Step, StepLabel, Paper, Button } from "@material-ui/core";
 import AddressForm from "./AddressForm";
 import PaymentForm from "./PaymentForm";
 import Review from "./Review";
-
-export const Copyright: React.FC = () => {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {"Copyright © "}
-            <Link color="inherit" href="https://material-ui.com/">
-                Your Website
-            </Link>{" "}
-            {new Date().getFullYear()}
-            {"."}
-        </Typography>
-    );
-};
 
 const useStyles = makeStyles(theme => ({
     layout: {
@@ -51,7 +38,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const steps = ["Shipping address", "Payment details", "Review your order"];
+const steps = ["Delivery address", "Payment details", "Review your order"];
 
 function getStepContent(step: number) {
     switch (step) {
@@ -135,7 +122,6 @@ export const Checkout: React.FC = () => {
                         )}
                     </React.Fragment>
                 </Paper>
-                <Copyright />
             </main>
         </React.Fragment>
     );

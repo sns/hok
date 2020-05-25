@@ -4,12 +4,10 @@ import Checkout from "./Checkout";
 import {
     Container,
     Grid,
-    Box,
     makeStyles,
     createStyles,
     Typography,
     Divider,
-    TextField,
     Paper,
 } from "@material-ui/core";
 import {
@@ -23,17 +21,10 @@ import { useSelector, useDispatch } from "react-redux";
 import CartItem from "../Models/CartItem";
 import classNames from "classnames";
 import { AddCircle, RemoveCircle, Delete } from "@material-ui/icons";
+import Copyright from "./Copyright";
 
 const useStyles = makeStyles(theme =>
     createStyles({
-        // cartContainer: {
-        //     width: "90%",
-        //     marginTop: "20px",
-        //     border: `1px solid ${theme.palette.divider}`,
-        //     borderRadius: theme.shape.borderRadius,
-        //     backgroundColor: theme.palette.background.paper,
-        //     color: theme.palette.text.secondary,
-        // },
         layout: {
             width: "auto",
             marginLeft: theme.spacing(2),
@@ -233,14 +224,15 @@ export const Cart: React.FC<Props> = props => {
     return (
         <>
             <Header />
-            <Grid container>
-                <Grid item xs={props.isMobile ? 12 : 12}>
+            <Grid container >
+                <Grid item xs={props.isMobile ? 12 : 6}>
                     {renderCartGrid()}
                 </Grid>
-                <Grid item xs={props.isMobile ? 12 : 12}>
+                <Grid item xs={props.isMobile ? 12 : 6}>
                     <Checkout />
                 </Grid>
             </Grid>
+            <Copyright />
         </>
     );
 };
